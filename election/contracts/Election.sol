@@ -1,16 +1,28 @@
-// Declare Solidity version here
 pragma solidity 0.4.24;
 
-// Declare smart contracts like this
-// We'll need to migrate or deploy this to the blockchain
 contract Election {
-    // Read/write candidate
-    // State variables allow us to write data to the blockchain
-    // Since it's public, it provides us a getter function to access this outside of contract
-    string public candidate;
+    // Model a Candidate
+    struct Candidate {
+        uint id;
+        string name;
+        uint voteCount;
+    }
 
-    // Setting the candidate value that will be stored on blockchain
+    // Read/Write Candidates
+    // Mapping id to a Candidate like object lookup to the candidates state variable
+    // No way to determine size of mapping cause any key not assigned a value defaults to empty Candidate
+    mapping(uint => Candidate) public candidates;
+
+    // Store Candidates Count
+    uint public candidatesCount;
+        
     constructor() public {
-        candidate = "Obama";
+        addCandidate("Obama");
+        addCandidate("Romney");
+    }
+
+    function addCandidate(string _name) private {
+        candidatesCount++;
+        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
     }
 }
