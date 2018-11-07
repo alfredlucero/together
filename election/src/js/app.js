@@ -30,6 +30,8 @@ App = {
       // Connect provider to interact with contract
       App.contracts.Election.setProvider(App.web3Provider);
 
+      App.listenForEvents();
+
       return App.render();
     });
   },
@@ -114,6 +116,25 @@ App = {
       .catch(function(err) {
         console.error(err);
       });
+  },
+  listenForEvents: function() {
+    App.contracts.Election.deployed().then(function(instance) {
+      // We subscribe to the voted event and pass in metadata to listen to all events in the blockchain
+      instance
+        .votedEvent(
+          {},
+          {
+            fromBlock: 0,
+            toBlock: "latest",
+            // We watch for when the votedEvent is called and re-render the app
+          }
+        )
+        .watch(function(error, event) {
+          console.log("event triggered", event);
+          // Reload when a new vote is recorded
+          App.render();
+        });
+    });
   },
 };
 

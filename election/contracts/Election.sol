@@ -16,6 +16,11 @@ contract Election {
     // Store accounts that have voted
     mapping(address => bool) public voters;
 
+    // Vote event we'll trigger 
+    event votedEvent (
+        uint indexed _candidateId
+    );
+
     // Store Candidates Count
     uint public candidatesCount;
         
@@ -43,5 +48,8 @@ contract Election {
 
         // update candidate vote Count
         candidates[_candidateId].voteCount++;
+
+        // trigger voted event
+        votedEvent(_candidateId);
     }
 }
